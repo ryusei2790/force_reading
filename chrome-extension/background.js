@@ -94,10 +94,10 @@ async function onAlarm() {
  */
 chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create(ALARM_NAME, {
-    delayInMinutes: 0.1, // テスト用: 約6秒後に初回発火
-    periodInMinutes: 1,  // テスト用: 毎分繰り返し
+    delayInMinutes: 1,
+    periodInMinutes: 60,
   });
-  console.info("[Blog-Read-Forced] テストモード。毎分通知します。");
+  console.info("[Blog-Read-Forced] 毎時間通知します。");
 });
 
 /**
@@ -116,12 +116,22 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 chrome.notifications.onClicked.addListener(async (notificationId) => {
   if (notificationId !== NOTIFICATION_ID) return;
 
-  const result = await chrome.storage.local.get("pendingArticleUrl");
+  const result = await chrome.storage.local.get(["pendingArticleUrl", STORAGE_KEY_GAS_URL]);
   const url = result.pendingArticleUrl;
+  const gasUrl = result[STORAGE_KEY_GAS_URL];
+
   if (url) {
     chrome.tabs.create({ url });
     chrome.notifications.clear(NOTIFICATION_ID);
     chrome.storage.local.remove("pendingArticleUrl");
+
+    // GAS に既読更新リクエストを送信
+    if (gasUrl) {
+      const markUrl = `${gasUrl}?action=markRead&url=${encodeURIComponent(url)}`;
+      fetch(markUrl).catch((err) =>
+        console.error("[Blog-Read-Forced] 既読更新に失敗しました:", err)
+      );
+    }
   }
 });
 
