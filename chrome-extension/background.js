@@ -94,10 +94,10 @@ async function onAlarm() {
  */
 chrome.runtime.onInstalled.addListener(() => {
   chrome.alarms.create(ALARM_NAME, {
-    delayInMinutes: 0.1, // テスト用: 約6秒後に初回発火
-    periodInMinutes: 1,  // テスト用: 毎分繰り返し
+    delayInMinutes: 1,
+    periodInMinutes: 180, // 3時間ごと
   });
-  console.info("[Blog-Read-Forced] テストモード。毎分通知します。");
+  console.info("[Blog-Read-Forced] 3時間ごとに通知します。");
 });
 
 /**
