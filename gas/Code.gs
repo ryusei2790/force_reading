@@ -107,7 +107,7 @@ function doGet(_e) {
       return jsonResponse({ status: "error", message: err.message });
     }
   }
-}
+
   try {
     const sheet = getSheet();
     const rows = sheet.getDataRange().getValues();
