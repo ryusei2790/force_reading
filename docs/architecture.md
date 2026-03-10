@@ -21,7 +21,7 @@ Chrome（ブラウザ）
 Chrome拡張 background.js（Service Worker）
   └─ chrome.alarms: 毎日12:00に発火
        └─ GAS doGet() にGETリクエスト
-            └─ スプレッドシートから未読をランダム1件取得 → JSON返却
+            └─ スプレッドシートから未読で一番古いもの1件取得 → JSON返却
                  └─ chrome.notifications.create() → デスクトップ通知表示
                       └─ 通知クリック → chrome.tabs.create({ url }) → 記事を開く
 ```

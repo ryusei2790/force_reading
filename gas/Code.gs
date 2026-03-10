@@ -87,14 +87,15 @@ function doGet(_e) {
     const sheet = getSheet();
     const rows = sheet.getDataRange().getValues();
 
-    // 1行目はヘッダーなのでスキップ、D列 (index 3) が "未読" の行を抽出
+    // 1行目はヘッダーなのでスキップ、D列 (index 3) が "未読" の行を抽出（登録順＝一番古い順）
     const unread = rows.slice(1).filter((row) => row[3] === "未読");
 
     if (unread.length === 0) {
       return jsonResponse({ status: "empty" });
     }
 
-    const picked = unread[Math.floor(Math.random() * unread.length)];
+    // 一番古い（先頭の）未読記事を返す
+    const picked = unread[0];
 
     return jsonResponse({
       status: "ok",

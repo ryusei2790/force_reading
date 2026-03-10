@@ -107,6 +107,40 @@
       border: none;
       border-top: 1px solid #e0e0e0;
     }
+
+    /* 未読記事カード */
+    #article-card {
+      background: #fff;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 13px;
+    }
+
+    #article-card .card-label {
+      font-size: 11px;
+      color: #888;
+      margin-bottom: 6px;
+    }
+
+    #article-title {
+      font-weight: bold;
+      color: #4285f4;
+      text-decoration: none;
+      display: block;
+      word-break: break-all;
+      line-height: 1.4;
+    }
+
+    #article-title:hover {
+      text-decoration: underline;
+    }
+
+    #article-empty {
+      font-size: 13px;
+      color: #888;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -123,6 +157,15 @@
       <br /><br />
       <button id="save-url-btn">URL を保存</button>
     </div>
+
+    <hr />
+
+    <!-- 未読記事表示 -->
+    <div id="article-card" style="display:none;">
+      <div class="card-label">今読むべき記事（最古の未読）</div>
+      <a id="article-title" href="#" target="_blank"></a>
+    </div>
+    <div id="article-empty" style="display:none;">未読記事はありません</div>
 
     <hr />
 

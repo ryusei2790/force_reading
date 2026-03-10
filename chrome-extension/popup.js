@@ -21,6 +21,15 @@ const registerBtn = /** @type {HTMLButtonElement} */ (document.getElementById("r
 /** @type {HTMLElement} */
 const messageEl = /** @type {HTMLElement} */ (document.getElementById("message"));
 
+/** @type {HTMLElement} */
+const articleCard = /** @type {HTMLElement} */ (document.getElementById("article-card"));
+
+/** @type {HTMLAnchorElement} */
+const articleTitle = /** @type {HTMLAnchorElement} */ (document.getElementById("article-title"));
+
+/** @type {HTMLElement} */
+const articleEmpty = /** @type {HTMLElement} */ (document.getElementById("article-empty"));
+
 // ── ユーティリティ ────────────────────────────────────────
 
 /**
@@ -47,12 +56,37 @@ function setDisabled(btn, disabled) {
 // ── 初期化 ───────────────────────────────────────────────
 
 /**
- * ポップアップ表示時に保存済み GAS URL をインプットに反映する。
+ * GAS doGet() を呼び出し、最古の未読記事をポップアップに表示する。
+ *
+ * @param {string} gasUrl
+ */
+async function loadOldestArticle(gasUrl) {
+  try {
+    const res = await fetch(gasUrl, { method: "GET" });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    if (data.status === "ok" && data.url) {
+      articleTitle.textContent = data.title || data.url;
+      articleTitle.href = data.url;
+      articleCard.style.display = "block";
+    } else {
+      articleEmpty.style.display = "block";
+    }
+  } catch (err) {
+    console.error("[Blog-Read-Forced] 記事取得失敗:", err);
+  }
+}
+
+/**
+ * ポップアップ表示時に保存済み GAS URL をインプットに反映し、未読記事を取得する。
  */
 async function init() {
   const result = await chrome.storage.local.get(STORAGE_KEY_GAS_URL);
-  if (result[STORAGE_KEY_GAS_URL]) {
-    gasUrlInput.value = result[STORAGE_KEY_GAS_URL];
+  const gasUrl = result[STORAGE_KEY_GAS_URL];
+  if (gasUrl) {
+    gasUrlInput.value = gasUrl;
+    await loadOldestArticle(gasUrl);
   }
 }
 
